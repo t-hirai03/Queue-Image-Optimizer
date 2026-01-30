@@ -46,6 +46,7 @@
 
 		checkInitialStatus() {
 			const status = $('#qio-status-area').data('status');
+			console.log('[QIO] Initial status:', status);
 			if (status === 'processing') {
 				this.isProcessing = true;
 				this.processStartTime = Date.now();
@@ -201,11 +202,18 @@
 		},
 
 		startContinuousProcessing() {
-			this.stopContinuousProcessing();
+			// 既存のタイマーをクリア（isProcessingはそのまま）
+			if (this.processInterval) {
+				clearTimeout(this.processInterval);
+				this.processInterval = null;
+			}
+			this.isProcessing = true;
+			console.log('[QIO] Starting continuous processing');
 			this.processNow();
 		},
 
 		stopContinuousProcessing() {
+			console.log('[QIO] Stopping continuous processing');
 			this.isProcessing = false;
 			if (this.processInterval) {
 				clearTimeout(this.processInterval);
@@ -214,10 +222,15 @@
 		},
 
 		processNow() {
-			if (!this.isProcessing) return;
+			if (!this.isProcessing) {
+				console.log('[QIO] processNow skipped - not processing');
+				return;
+			}
 
+			console.log('[QIO] processNow called');
 			this.ajax('process_now')
 				.done((response) => {
+					console.log('[QIO] processNow response:', response);
 					if (response.success) {
 						const { progress, statistics } = response.data;
 
