@@ -142,9 +142,10 @@ class QIO_Admin {
 			wp_die( esc_html__( 'アクセス権限がありません。', 'queue-image-optimizer' ) );
 		}
 
-		// ページリロード時に完了ステータスをリセットし、キューと統計をクリア
+		// 処理中以外の状態でキューにデータがあればクリア（古いデータ）
 		$progress = get_option( 'qio_progress', array() );
-		if ( isset( $progress['status'] ) && 'completed' === $progress['status'] ) {
+		$status   = $progress['status'] ?? 'idle';
+		if ( 'processing' !== $status ) {
 			$this->queue->clear_queue( 'all', true );
 		}
 
