@@ -11,7 +11,7 @@
  * Text Domain: queue-image-optimizer
  * Domain Path: /languages
  * Requires at least: 5.0
- * Requires PHP: 7.4
+ * Requires PHP: 8.0
  *
  * @package QueueImageOptimizer
  */

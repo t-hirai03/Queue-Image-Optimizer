@@ -3,7 +3,7 @@ Contributors: t-hirai03
 Tags: image optimization, compression, performance, media, background processing
 Requires at least: 5.0
 Tested up to: 6.7
-Requires PHP: 7.4
+Requires PHP: 8.0
 Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -37,7 +37,7 @@ Queue Image Optimizer is a WordPress plugin that compresses images using backgro
 = Requirements =
 
 * WordPress 5.0 or higher
-* PHP 7.4 or higher
+* PHP 8.0 or higher
 * Imagick extension (recommended) or GD Library
 
 == Installation ==
@@ -89,7 +89,7 @@ The plugin automatically detects this and keeps the original file. You'll never 
 * Backup functionality
 * Real-time progress tracking
 * Smart compression (prevents file size increase)
-* PHP 7.4 - 8.3 compatibility
+* PHP 8.0 - 8.4 compatibility
 
 == Upgrade Notice ==
 
