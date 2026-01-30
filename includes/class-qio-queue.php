@@ -45,7 +45,7 @@ class QIO_Queue {
 		),
 		'fast'     => array(
 			'interval'   => 0, // 連続実行
-			'batch_size' => 50,
+			'batch_size' => 100,
 		),
 	);
 
