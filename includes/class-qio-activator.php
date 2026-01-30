@@ -80,9 +80,6 @@ class QIO_Activator {
 	 */
 	private static function set_default_options() {
 		$default_options = array(
-			'processing_mode'    => 'standard',
-			'custom_interval'    => 1,
-			'custom_batch_size'  => 20,
 			'jpeg_quality'       => 82,
 			'png_compression'    => 6,
 			'auto_optimize'      => true,

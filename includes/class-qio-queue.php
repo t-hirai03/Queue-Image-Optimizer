@@ -30,26 +30,6 @@ class QIO_Queue {
 	private $settings;
 
 	/**
-	 * 処理モード設定
-	 *
-	 * @var array
-	 */
-	private $mode_config = array(
-		'safe'     => array(
-			'interval'   => 300, // 5分
-			'batch_size' => 10,
-		),
-		'standard' => array(
-			'interval'   => 60, // 1分
-			'batch_size' => 20,
-		),
-		'fast'     => array(
-			'interval'   => 0, // 連続実行
-			'batch_size' => 300,
-		),
-	);
-
-	/**
 	 * コンストラクタ
 	 *
 	 * @param QIO_Compressor $compressor 圧縮クラスのインスタンス
@@ -108,20 +88,24 @@ class QIO_Queue {
 
 	/**
 	 * 現在のモード設定を取得
+	 * 画面を開いている時（Ajax）は高速、バックグラウンド（Cron）は控えめ
 	 *
 	 * @return array
 	 */
 	public function get_mode_settings() {
-		$mode = isset( $this->settings['processing_mode'] ) ? $this->settings['processing_mode'] : 'standard';
-
-		if ( 'custom' === $mode ) {
+		// Ajax（画面を開いている時）は高速処理
+		if ( wp_doing_ajax() ) {
 			return array(
-				'interval'   => isset( $this->settings['custom_interval'] ) ? (int) $this->settings['custom_interval'] * 60 : 60,
-				'batch_size' => isset( $this->settings['custom_batch_size'] ) ? (int) $this->settings['custom_batch_size'] : 20,
+				'interval'   => 0,
+				'batch_size' => 300,
 			);
 		}
 
-		return isset( $this->mode_config[ $mode ] ) ? $this->mode_config[ $mode ] : $this->mode_config['standard'];
+		// Cron（バックグラウンド）は控えめに
+		return array(
+			'interval'   => 60,
+			'batch_size' => 20,
+		);
 	}
 
 	/**
@@ -740,7 +724,7 @@ class QIO_Queue {
 	 * @param string $status クリアするステータス（all, pending, failed）
 	 * @return int 削除された件数
 	 */
-	public function clear_queue( $status = 'all' ) {
+	public function clear_queue( $status = 'all', $clear_stats = false ) {
 		global $wpdb;
 
 		$table_name = $wpdb->prefix . 'qio_queue';
@@ -753,6 +737,12 @@ class QIO_Queue {
 				array( 'status' => $status ),
 				array( '%s' )
 			);
+		}
+
+		// 統計もクリア
+		if ( $clear_stats ) {
+			$stats_table = $wpdb->prefix . 'qio_stats';
+			$wpdb->query( "DELETE FROM {$stats_table}" );
 		}
 
 		// 進捗をリセット

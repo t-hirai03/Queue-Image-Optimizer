@@ -142,6 +142,12 @@ class QIO_Admin {
 			wp_die( esc_html__( 'アクセス権限がありません。', 'queue-image-optimizer' ) );
 		}
 
+		// ページリロード時に完了ステータスをリセットし、キューと統計をクリア
+		$progress = get_option( 'qio_progress', array() );
+		if ( isset( $progress['status'] ) && 'completed' === $progress['status'] ) {
+			$this->queue->clear_queue( 'all', true );
+		}
+
 		include QIO_PLUGIN_DIR . 'admin/views/dashboard.php';
 	}
 
@@ -237,9 +243,6 @@ class QIO_Admin {
 		$this->verify_ajax_request();
 
 		$settings = array(
-			'processing_mode'    => sanitize_text_field( wp_unslash( $_POST['processing_mode'] ?? 'standard' ) ),
-			'custom_interval'    => absint( $_POST['custom_interval'] ?? 1 ),
-			'custom_batch_size'  => absint( $_POST['custom_batch_size'] ?? 20 ),
 			'jpeg_quality'       => min( 100, max( 1, absint( $_POST['jpeg_quality'] ?? 82 ) ) ),
 			'png_compression'    => min( 9, max( 0, absint( $_POST['png_compression'] ?? 6 ) ) ),
 			'auto_optimize'      => ! empty( $_POST['auto_optimize'] ),

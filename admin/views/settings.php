@@ -14,9 +14,6 @@ $settings = get_option( 'qio_settings', array() );
 
 // デフォルト値
 $defaults = array(
-	'processing_mode'    => 'standard',
-	'custom_interval'    => 1,
-	'custom_batch_size'  => 20,
 	'jpeg_quality'       => 82,
 	'png_compression'    => 6,
 	'auto_optimize'      => true,
@@ -30,63 +27,6 @@ $settings = wp_parse_args( $settings, $defaults );
 	<h1><?php esc_html_e( '設定', 'queue-image-optimizer' ); ?></h1>
 
 	<form id="qio-settings-form" class="qio-settings-form">
-		<!-- 処理モード -->
-		<div class="qio-settings-section">
-			<h2><?php esc_html_e( '処理モード', 'queue-image-optimizer' ); ?></h2>
-
-			<table class="form-table">
-				<tr>
-					<th scope="row"><?php esc_html_e( 'モード選択', 'queue-image-optimizer' ); ?></th>
-					<td>
-						<fieldset>
-							<label>
-								<input type="radio" name="processing_mode" value="safe" <?php checked( $settings['processing_mode'], 'safe' ); ?>>
-								<strong><?php esc_html_e( '安全モード', 'queue-image-optimizer' ); ?></strong>
-								<span class="description"><?php esc_html_e( '5分間隔 / 10枚ずつ - 低スペックサーバー向け', 'queue-image-optimizer' ); ?></span>
-							</label>
-							<br>
-							<label>
-								<input type="radio" name="processing_mode" value="standard" <?php checked( $settings['processing_mode'], 'standard' ); ?>>
-								<strong><?php esc_html_e( '標準モード', 'queue-image-optimizer' ); ?></strong>
-								<span class="description"><?php esc_html_e( '1分間隔 / 20枚ずつ - 一般的なVPS向け', 'queue-image-optimizer' ); ?></span>
-							</label>
-							<br>
-							<label>
-								<input type="radio" name="processing_mode" value="fast" <?php checked( $settings['processing_mode'], 'fast' ); ?>>
-								<strong><?php esc_html_e( '高速モード', 'queue-image-optimizer' ); ?></strong>
-								<span class="description"><?php esc_html_e( '連続実行 / 300枚ずつ - 高スペックサーバー向け', 'queue-image-optimizer' ); ?></span>
-							</label>
-							<br>
-							<label>
-								<input type="radio" name="processing_mode" value="custom" <?php checked( $settings['processing_mode'], 'custom' ); ?>>
-								<strong><?php esc_html_e( 'カスタム', 'queue-image-optimizer' ); ?></strong>
-								<span class="description"><?php esc_html_e( '上級者向け', 'queue-image-optimizer' ); ?></span>
-							</label>
-						</fieldset>
-					</td>
-				</tr>
-				<tr class="qio-custom-settings" <?php echo 'custom' !== $settings['processing_mode'] ? 'style="display:none;"' : ''; ?>>
-					<th scope="row"><?php esc_html_e( 'カスタム設定', 'queue-image-optimizer' ); ?></th>
-					<td>
-						<p>
-							<label>
-								<?php esc_html_e( '処理間隔:', 'queue-image-optimizer' ); ?>
-								<input type="number" name="custom_interval" value="<?php echo esc_attr( $settings['custom_interval'] ); ?>" min="0" max="60" class="small-text">
-								<?php esc_html_e( '分（0で連続実行）', 'queue-image-optimizer' ); ?>
-							</label>
-						</p>
-						<p>
-							<label>
-								<?php esc_html_e( 'バッチサイズ:', 'queue-image-optimizer' ); ?>
-								<input type="number" name="custom_batch_size" value="<?php echo esc_attr( $settings['custom_batch_size'] ); ?>" min="1" max="100" class="small-text">
-								<?php esc_html_e( '枚', 'queue-image-optimizer' ); ?>
-							</label>
-						</p>
-					</td>
-				</tr>
-			</table>
-		</div>
-
 		<!-- 圧縮品質 -->
 		<div class="qio-settings-section">
 			<h2><?php esc_html_e( '圧縮品質', 'queue-image-optimizer' ); ?></h2>

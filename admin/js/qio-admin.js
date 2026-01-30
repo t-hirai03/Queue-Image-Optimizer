@@ -30,7 +30,6 @@
 
 			// Settings events
 			$('#qio-settings-form').on('submit', (e) => this.saveSettings(e));
-			$('input[name="processing_mode"]').on('change', () => this.toggleCustomSettings());
 			$('#qio-clear-pending').on('click', () => this.clearQueue('pending'));
 			$('#qio-clear-all').on('click', () => this.clearQueue('all'));
 			$('#qio-reset-flags').on('click', () => this.resetFlags());
@@ -52,11 +51,6 @@
 				this.processStartTime = Date.now();
 				this.startContinuousProcessing();
 			}
-		},
-
-		toggleCustomSettings() {
-			const mode = $('input[name="processing_mode"]:checked').val();
-			$('.qio-custom-settings').toggle(mode === 'custom');
 		},
 
 		showStatus(statusClass) {
