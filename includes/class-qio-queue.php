@@ -135,18 +135,19 @@ class QIO_Queue {
 		$supported_types = array( 'image/jpeg', 'image/png', 'image/gif', 'image/webp' );
 
 		// 最適化済みフラグがない画像を取得
-		$query = $wpdb->prepare(
-			"SELECT p.ID, p.post_mime_type
-			FROM {$wpdb->posts} p
-			LEFT JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id AND pm.meta_key = '_qio_optimized'
-			WHERE p.post_type = 'attachment'
-			AND p.post_mime_type IN (" . implode( ',', array_fill( 0, count( $supported_types ), '%s' ) ) . ')
-			AND pm.meta_value IS NULL
-			ORDER BY p.ID DESC',
-			...$supported_types
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $wpdb->prepare() is used correctly above
+		$attachments = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT p.ID, p.post_mime_type
+				FROM {$wpdb->posts} p
+				LEFT JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id AND pm.meta_key = '_qio_optimized'
+				WHERE p.post_type = 'attachment'
+				AND p.post_mime_type IN (" . implode( ',', array_fill( 0, count( $supported_types ), '%s' ) ) . ')
+				AND pm.meta_value IS NULL
+				ORDER BY p.ID DESC',
+				...$supported_types
+			)
 		);
-
-		$attachments = $wpdb->get_results( $query );
 
 		$total_count = 0;
 		$total_size  = 0;
