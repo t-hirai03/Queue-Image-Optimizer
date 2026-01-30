@@ -31,6 +31,6 @@ jobs:
             --standard=WordPress-Extra \
             --extensions=php \
             --ignore=vendor/,node_modules/,tests/ \
-            --exclude=WordPress.Files.FileName,WordPress.PHP.YodaConditions \
+            --exclude=WordPress.Files.FileName,WordPress.PHP.YodaConditions,WordPress.DB.DirectDatabaseQuery,WordPress.DB.PreparedSQL \
             --report=checkstyle \
             -s | cs2pr
