@@ -1,0 +1,109 @@
+name: Security Scan
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Check for vulnerable functions
+        run: |
+          echo "Checking for potentially dangerous functions..."
+
+          # Define dangerous patterns
+          DANGEROUS_PATTERNS=(
+            'eval\s*\('
+            'exec\s*\('
+            'system\s*\('
+            'shell_exec\s*\('
+            'passthru\s*\('
+            'popen\s*\('
+            'proc_open\s*\('
+            '\$_GET\s*\['
+            '\$_POST\s*\['
+            '\$_REQUEST\s*\['
+            'serialize\s*\('
+            'unserialize\s*\('
+            'base64_decode\s*\('
+            'file_get_contents\s*\(\s*\$'
+            'file_put_contents\s*\(\s*\$'
+            'include\s*\(\s*\$'
+            'require\s*\(\s*\$'
+          )
+
+          FOUND_ISSUES=0
+
+          for pattern in "${DANGEROUS_PATTERNS[@]}"; do
+            RESULTS=$(grep -rn --include="*.php" -E "$pattern" . --exclude-dir=vendor --exclude-dir=node_modules 2>/dev/null || true)
+            if [ -n "$RESULTS" ]; then
+              echo ""
+              echo "⚠️  Pattern: $pattern"
+              echo "$RESULTS"
+              FOUND_ISSUES=$((FOUND_ISSUES + 1))
+            fi
+          done
+
+          if [ $FOUND_ISSUES -gt 0 ]; then
+            echo ""
+            echo "::warning::Found $FOUND_ISSUES potentially dangerous patterns. Please review manually."
+          else
+            echo "✅ No dangerous patterns found."
+          fi
+
+      - name: Check for SQL injection vulnerabilities
+        run: |
+          echo "Checking for potential SQL injection..."
+
+          # Check for direct variable interpolation in SQL
+          RESULTS=$(grep -rn --include="*.php" -E '\$wpdb->(query|get_|prepare).*\$[a-zA-Z_]+' . --exclude-dir=vendor --exclude-dir=node_modules 2>/dev/null || true)
+
+          if [ -n "$RESULTS" ]; then
+            echo "Found potential SQL injection points (review manually):"
+            echo "$RESULTS"
+            echo "::warning::Found potential SQL injection points. Ensure all queries use \$wpdb->prepare()."
+          else
+            echo "✅ No obvious SQL injection vulnerabilities found."
+          fi
+
+      - name: Check for XSS vulnerabilities
+        run: |
+          echo "Checking for potential XSS vulnerabilities..."
+
+          # Check for echo without escaping
+          RESULTS=$(grep -rn --include="*.php" -E 'echo\s+\$(?!.*esc_)' . --exclude-dir=vendor --exclude-dir=node_modules 2>/dev/null || true)
+
+          if [ -n "$RESULTS" ]; then
+            echo "Found potential XSS points (review manually):"
+            echo "$RESULTS"
+            echo "::warning::Found potential XSS points. Ensure all output is escaped."
+          else
+            echo "✅ No obvious XSS vulnerabilities found."
+          fi
+
+      - name: Check nonce usage
+        run: |
+          echo "Checking nonce implementation..."
+
+          # Check if wp_nonce and check_ajax_referer are used
+          NONCE_CREATE=$(grep -rn --include="*.php" -E 'wp_create_nonce|wp_nonce_field' . --exclude-dir=vendor --exclude-dir=node_modules 2>/dev/null | wc -l)
+          NONCE_VERIFY=$(grep -rn --include="*.php" -E 'wp_verify_nonce|check_ajax_referer|check_admin_referer' . --exclude-dir=vendor --exclude-dir=node_modules 2>/dev/null | wc -l)
+
+          echo "Nonce creation calls: $NONCE_CREATE"
+          echo "Nonce verification calls: $NONCE_VERIFY"
+
+          if [ "$NONCE_CREATE" -gt 0 ] && [ "$NONCE_VERIFY" -gt 0 ]; then
+            echo "✅ Nonce implementation found."
+          else
+            echo "::warning::Nonce implementation may be incomplete."
+          fi

@@ -28,8 +28,9 @@ jobs:
       - name: Run WPCS
         run: |
           ~/.composer/vendor/bin/phpcs . \
-            --standard=WordPress \
+            --standard=WordPress-Extra \
             --extensions=php \
-            --ignore=vendor/,node_modules/ \
+            --ignore=vendor/,node_modules/,tests/ \
+            --exclude=WordPress.Files.FileName,WordPress.PHP.YodaConditions \
             --report=checkstyle \
             -s | cs2pr

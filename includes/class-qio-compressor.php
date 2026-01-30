@@ -143,7 +143,7 @@ class QIO_Compressor {
 			// エラー時は一時ファイルから復元
 			if ( file_exists( $temp_file ) ) {
 				copy( $temp_file, $file_path );
-				unlink( $temp_file );
+				wp_delete_file( $temp_file );
 			}
 			return $result;
 		}
@@ -160,7 +160,7 @@ class QIO_Compressor {
 
 		// 一時ファイルを削除
 		if ( file_exists( $temp_file ) ) {
-			unlink( $temp_file );
+			wp_delete_file( $temp_file );
 		}
 
 		return array(

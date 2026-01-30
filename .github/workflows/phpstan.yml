@@ -1,0 +1,61 @@
+name: PHPStan Static Analysis
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  phpstan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer
+
+      - name: Create PHPStan config
+        run: |
+          cat > phpstan.neon << 'EOF'
+          parameters:
+            level: 5
+            paths:
+              - .
+            excludePaths:
+              - vendor
+              - node_modules
+            scanDirectories:
+              - .
+            bootstrapFiles:
+              - phpstan-bootstrap.php
+          EOF
+
+      - name: Create PHPStan bootstrap
+        run: |
+          cat > phpstan-bootstrap.php << 'EOF'
+          <?php
+          // WordPress constants
+          define('ABSPATH', '/var/www/html/');
+          define('WP_CONTENT_DIR', '/var/www/html/wp-content');
+          define('WP_PLUGIN_DIR', '/var/www/html/wp-content/plugins');
+          define('WPINC', 'wp-includes');
+
+          // Plugin constants
+          define('QIO_VERSION', '1.0.0');
+          define('QIO_PLUGIN_DIR', __DIR__ . '/');
+          define('QIO_PLUGIN_URL', 'http://example.com/wp-content/plugins/queue-image-optimizer/');
+          define('QIO_PLUGIN_BASENAME', 'queue-image-optimizer/queue-image-optimizer.php');
+          EOF
+
+      - name: Install PHPStan
+        run: |
+          composer global require phpstan/phpstan
+          composer global require szepeviktor/phpstan-wordpress
+
+      - name: Run PHPStan
+        run: |
+          ~/.composer/vendor/bin/phpstan analyse --memory-limit=512M || true

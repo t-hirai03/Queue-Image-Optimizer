@@ -1,0 +1,53 @@
+name: ESLint JavaScript Check
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  eslint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Create ESLint config
+        run: |
+          cat > .eslintrc.json << 'EOF'
+          {
+            "env": {
+              "browser": true,
+              "jquery": true,
+              "es2021": true
+            },
+            "extends": "eslint:recommended",
+            "parserOptions": {
+              "ecmaVersion": "latest",
+              "sourceType": "script"
+            },
+            "globals": {
+              "qioAdmin": "readonly",
+              "wp": "readonly"
+            },
+            "rules": {
+              "no-unused-vars": "warn",
+              "no-console": "off",
+              "indent": ["error", "tab"],
+              "quotes": ["error", "single", { "avoidEscape": true }],
+              "semi": ["error", "always"]
+            }
+          }
+          EOF
+
+      - name: Install ESLint
+        run: npm install eslint --save-dev
+
+      - name: Run ESLint
+        run: |
+          npx eslint "admin/js/**/*.js" --format stylish || true
