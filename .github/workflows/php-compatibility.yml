@@ -2,7 +2,7 @@ name: PHP Compatibility Check
 
 on:
   push:
-    branches: [ main, 'feature/**' ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 

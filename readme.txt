@@ -1,8 +1,8 @@
 === Queue Image Optimizer ===
-Contributors: yourname
+Contributors: t-hirai03
 Tags: image optimization, compression, performance, media, background processing
 Requires at least: 5.0
-Tested up to: 6.4
+Tested up to: 6.7
 Requires PHP: 7.4
 Stable tag: 1.0.0
 License: GPLv2 or later
@@ -16,7 +16,8 @@ Queue Image Optimizer is a WordPress plugin that compresses images using backgro
 
 = Key Features =
 
-* **Background Processing**: Images are optimized in the background using Action Scheduler or WP-Cron
+* **High-Speed Processing**: When the dashboard is open, parallel Ajax requests enable rapid continuous processing
+* **Background Processing**: Processing continues even when you close the browser (using WP-Cron)
 * **No External APIs**: All compression is done locally using Imagick or GD Library
 * **No Timeouts**: Process thousands of images without server timeouts
 * **Resume Capability**: Processing can be paused and resumed at any time
@@ -24,6 +25,7 @@ Queue Image Optimizer is a WordPress plugin that compresses images using backgro
 * **Thumbnail Support**: Optionally optimize WordPress-generated thumbnails
 * **Backup Option**: Keep original images before compression
 * **Progress Tracking**: Real-time progress display with estimated completion time
+* **Smart Compression**: Automatically reverts if compression increases file size
 
 = Supported Formats =
 
@@ -42,19 +44,7 @@ Queue Image Optimizer is a WordPress plugin that compresses images using backgro
 
 1. Upload the `queue-image-optimizer` folder to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Go to 'Image Optimizer' in the admin menu to start optimizing
-
-= Optional: Install Action Scheduler =
-
-For best performance, install Action Scheduler:
-
-`cd wp-content/plugins/queue-image-optimizer
-mkdir -p vendor
-cd vendor
-curl -L https://github.com/woocommerce/action-scheduler/archive/refs/tags/3.7.4.tar.gz | tar xz
-mv action-scheduler-3.7.4 action-scheduler`
-
-Without Action Scheduler, the plugin will use WP-Cron as a fallback.
+3. Go to 'Queue Image Optimizer' in the admin menu to start optimizing
 
 == Frequently Asked Questions ==
 
@@ -62,24 +52,28 @@ Without Action Scheduler, the plugin will use WP-Cron as a fallback.
 
 * **Safe Mode**: 5-minute intervals, 10 images per batch. Best for shared hosting.
 * **Standard Mode**: 1-minute intervals, 20 images per batch. Best for most VPS servers.
-* **Fast Mode**: Continuous processing, 50 images per batch. Best for dedicated servers.
+* **Fast Mode**: Continuous processing, 300 images per batch. Best for dedicated servers.
 * **Custom Mode**: Set your own intervals and batch sizes.
+
+= How does high-speed mode work? =
+
+When you keep the dashboard page open, the plugin sends parallel Ajax requests to process images rapidly. This is much faster than background-only processing.
 
 = Can I close the browser while processing? =
 
-Yes! Processing continues in the background. When you return to the dashboard, you'll see the current progress.
+Yes! Processing continues in the background using WP-Cron. However, it will be slower than keeping the page open.
 
 = Will this affect my original images? =
 
 By default, original images are replaced with optimized versions. Enable the backup option in settings to keep original files.
 
-= Why is Action Scheduler recommended? =
+= What if compression makes the file larger? =
 
-Action Scheduler provides more reliable background processing than WP-Cron, especially for large queues. However, the plugin works fine with WP-Cron as a fallback.
+The plugin automatically detects this and keeps the original file. You'll never end up with a larger file after optimization.
 
 == Screenshots ==
 
-1. Dashboard with statistics and progress bar
+1. Dashboard with progress tracking
 2. Settings page with processing modes
 3. Compression quality settings
 
@@ -87,12 +81,15 @@ Action Scheduler provides more reliable background processing than WP-Cron, espe
 
 = 1.0.0 =
 * Initial release
-* Background queue processing with Action Scheduler
+* High-speed Ajax continuous processing
+* Background processing with WP-Cron fallback
 * Bulk optimization feature
 * Auto-optimize on upload
-* Multiple processing modes
+* Multiple processing modes (Safe/Standard/Fast/Custom)
 * Backup functionality
-* Progress tracking
+* Real-time progress tracking
+* Smart compression (prevents file size increase)
+* PHP 7.4 - 8.3 compatibility
 
 == Upgrade Notice ==
 
