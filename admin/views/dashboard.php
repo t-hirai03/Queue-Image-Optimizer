@@ -30,14 +30,14 @@ $statistics = $this->queue->get_statistics();
 
 	<!-- メインパネル -->
 	<div class="qio-main-panel">
-		<h2><?php esc_html_e( '一括最適化', 'queue-image-optimizer' ); ?></h2>
+		<h2><?php esc_html_e( '圧縮処理進捗', 'queue-image-optimizer' ); ?></h2>
 
 		<!-- 状態表示エリア -->
 		<div id="qio-status-area" class="qio-status-area" data-status="<?php echo esc_attr( $progress['status'] ); ?>">
 
 			<!-- アイドル状態 -->
 			<div class="qio-status-idle" <?php echo 'idle' !== $progress['status'] ? 'style="display:none;"' : ''; ?>>
-				<p><?php esc_html_e( '未最適化の画像をスキャンして、一括最適化を開始できます。', 'queue-image-optimizer' ); ?></p>
+				<p><?php esc_html_e( '未圧縮の画像をスキャンして、圧縮処理を開始できます。', 'queue-image-optimizer' ); ?></p>
 				<button type="button" class="button button-primary button-hero" id="qio-scan-btn">
 					<?php esc_html_e( 'スキャン開始', 'queue-image-optimizer' ); ?>
 				</button>
