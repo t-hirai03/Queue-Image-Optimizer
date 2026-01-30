@@ -246,9 +246,7 @@
 
 						// Update statistics
 						$('#qio-total-images').text(statistics.total_images.toLocaleString());
-						$('#qio-optimized-images').text(statistics.optimized_images.toLocaleString());
 						$('#qio-total-saved').text(this.formatBytes(statistics.total_saved));
-						$('#qio-today-processed').text(statistics.today_processed.toLocaleString());
 
 						// Estimate remaining time
 						if (progress.completed > this.lastProcessed && this.processStartTime) {
@@ -320,9 +318,7 @@
 
 						// Update statistics
 						$('#qio-total-images').text(statistics.total_images.toLocaleString());
-						$('#qio-optimized-images').text(statistics.optimized_images.toLocaleString());
 						$('#qio-total-saved').text(this.formatBytes(statistics.total_saved));
-						$('#qio-today-processed').text(statistics.today_processed.toLocaleString());
 
 						// Estimate remaining time
 						if (progress.completed > this.lastProcessed) {

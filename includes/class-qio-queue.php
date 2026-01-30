@@ -45,7 +45,7 @@ class QIO_Queue {
 		),
 		'fast'     => array(
 			'interval'   => 0, // 連続実行
-			'batch_size' => 200,
+			'batch_size' => 300,
 		),
 	);
 
@@ -709,9 +709,9 @@ class QIO_Queue {
 			);
 		}
 
-		// 最適化済み画像数
+		// 最適化済みファイル数（キューテーブルのcompleted数）
 		$optimized_images = $wpdb->get_var(
-			"SELECT COUNT(*) FROM {$wpdb->postmeta} WHERE meta_key = '_qio_optimized' AND meta_value = '1'"
+			"SELECT COUNT(*) FROM {$queue_table} WHERE status = 'completed'"
 		);
 
 		return array(

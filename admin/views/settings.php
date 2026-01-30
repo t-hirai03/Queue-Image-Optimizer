@@ -54,7 +54,7 @@ $settings = wp_parse_args( $settings, $defaults );
 							<label>
 								<input type="radio" name="processing_mode" value="fast" <?php checked( $settings['processing_mode'], 'fast' ); ?>>
 								<strong><?php esc_html_e( '高速モード', 'queue-image-optimizer' ); ?></strong>
-								<span class="description"><?php esc_html_e( '連続実行 / 200枚ずつ - 高スペックサーバー向け', 'queue-image-optimizer' ); ?></span>
+								<span class="description"><?php esc_html_e( '連続実行 / 300枚ずつ - 高スペックサーバー向け', 'queue-image-optimizer' ); ?></span>
 							</label>
 							<br>
 							<label>

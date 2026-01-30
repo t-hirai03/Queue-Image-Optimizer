@@ -12,29 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $progress   = $this->queue->get_progress();
 $statistics = $this->queue->get_statistics();
-$compressor = qio()->compressor;
-$server_info = $compressor->get_server_info();
 ?>
 <div class="wrap qio-wrap">
 	<h1><?php esc_html_e( 'Queue Image Optimizer', 'queue-image-optimizer' ); ?></h1>
-
-	<!-- サーバー環境情報 -->
-	<div class="qio-notice qio-notice-info">
-		<p>
-			<strong><?php esc_html_e( '画像処理エンジン:', 'queue-image-optimizer' ); ?></strong>
-			<?php
-			if ( 'imagick' === $server_info['engine'] ) {
-				echo '<span class="qio-badge qio-badge-success">Imagick</span>';
-				echo ' <small>(' . esc_html( $server_info['imagick_version'] ) . ')</small>';
-			} elseif ( 'gd' === $server_info['engine'] ) {
-				echo '<span class="qio-badge qio-badge-warning">GD Library</span>';
-				echo ' <small>(' . esc_html( $server_info['gd_version'] ) . ')</small>';
-			} else {
-				echo '<span class="qio-badge qio-badge-error">' . esc_html__( '利用不可', 'queue-image-optimizer' ) . '</span>';
-			}
-			?>
-		</p>
-	</div>
 
 	<!-- 統計サマリー -->
 	<div class="qio-stats-grid">
@@ -43,16 +23,8 @@ $server_info = $compressor->get_server_info();
 			<span class="qio-stat-label"><?php esc_html_e( '圧縮対象ファイル総数', 'queue-image-optimizer' ); ?></span>
 		</div>
 		<div class="qio-stat-box">
-			<span class="qio-stat-number" id="qio-optimized-images"><?php echo esc_html( number_format( $statistics['optimized_images'] ) ); ?></span>
-			<span class="qio-stat-label"><?php esc_html_e( '最適化済み', 'queue-image-optimizer' ); ?></span>
-		</div>
-		<div class="qio-stat-box">
 			<span class="qio-stat-number" id="qio-total-saved"><?php echo esc_html( QIO_Admin::format_bytes( $statistics['total_saved'] ) ); ?></span>
 			<span class="qio-stat-label"><?php esc_html_e( '削減サイズ', 'queue-image-optimizer' ); ?></span>
-		</div>
-		<div class="qio-stat-box">
-			<span class="qio-stat-number" id="qio-today-processed"><?php echo esc_html( number_format( $statistics['today_processed'] ) ); ?></span>
-			<span class="qio-stat-label"><?php esc_html_e( '本日の処理数', 'queue-image-optimizer' ); ?></span>
 		</div>
 	</div>
 
