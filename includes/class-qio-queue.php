@@ -45,7 +45,7 @@ class QIO_Queue {
 		),
 		'fast'     => array(
 			'interval'   => 0, // 連続実行
-			'batch_size' => 100,
+			'batch_size' => 200,
 		),
 	);
 
@@ -698,12 +698,16 @@ class QIO_Queue {
 			)
 		);
 
-		// メディアライブラリの総画像数
-		$total_images = $wpdb->get_var(
-			"SELECT COUNT(*) FROM {$wpdb->posts}
-			WHERE post_type = 'attachment'
-			AND post_mime_type IN ('image/jpeg', 'image/png', 'image/gif', 'image/webp')"
-		);
+		// 圧縮対象ファイル総数（サムネイル含む）
+		// キューにデータがあればその総数、なければメディア数
+		$total_files = $wpdb->get_var( "SELECT COUNT(*) FROM {$queue_table}" );
+		if ( ! $total_files ) {
+			$total_files = $wpdb->get_var(
+				"SELECT COUNT(*) FROM {$wpdb->posts}
+				WHERE post_type = 'attachment'
+				AND post_mime_type IN ('image/jpeg', 'image/png', 'image/gif', 'image/webp')"
+			);
+		}
 
 		// 最適化済み画像数
 		$optimized_images = $wpdb->get_var(
@@ -711,7 +715,7 @@ class QIO_Queue {
 		);
 
 		return array(
-			'total_images'     => (int) $total_images,
+			'total_images'     => (int) $total_files,
 			'optimized_images' => (int) $optimized_images,
 			'total_processed'  => (int) ( $total_stats->total_processed ?? 0 ),
 			'total_saved'      => (int) ( $total_stats->total_saved ?? 0 ),

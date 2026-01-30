@@ -130,18 +130,38 @@ class QIO_Compressor {
 			}
 		}
 
+		// 圧縮前に一時コピーを作成（サイズ増加時の復元用）
+		$temp_file = $file_path . '.qio_temp';
+		copy( $file_path, $temp_file );
+
 		// エンジンに応じた圧縮処理
 		$result = 'imagick' === $this->engine
 			? $this->compress_with_imagick( $file_path, $mime_type['type'] )
 			: $this->compress_with_gd( $file_path, $mime_type['type'] );
 
 		if ( is_wp_error( $result ) ) {
+			// エラー時は一時ファイルから復元
+			if ( file_exists( $temp_file ) ) {
+				copy( $temp_file, $file_path );
+				unlink( $temp_file );
+			}
 			return $result;
 		}
 
 		// ファイルサイズキャッシュをクリアして正確なサイズを取得
 		clearstatcache( true, $file_path );
 		$optimized_size = filesize( $file_path );
+
+		// 圧縮後にサイズが増加した場合は元に戻す
+		if ( $optimized_size >= $original_size ) {
+			copy( $temp_file, $file_path );
+			$optimized_size = $original_size;
+		}
+
+		// 一時ファイルを削除
+		if ( file_exists( $temp_file ) ) {
+			unlink( $temp_file );
+		}
 
 		return array(
 			'original_size'  => $original_size,

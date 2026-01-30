@@ -40,7 +40,7 @@ $server_info = $compressor->get_server_info();
 	<div class="qio-stats-grid">
 		<div class="qio-stat-box">
 			<span class="qio-stat-number" id="qio-total-images"><?php echo esc_html( number_format( $statistics['total_images'] ) ); ?></span>
-			<span class="qio-stat-label"><?php esc_html_e( '総画像数', 'queue-image-optimizer' ); ?></span>
+			<span class="qio-stat-label"><?php esc_html_e( '圧縮対象ファイル総数', 'queue-image-optimizer' ); ?></span>
 		</div>
 		<div class="qio-stat-box">
 			<span class="qio-stat-number" id="qio-optimized-images"><?php echo esc_html( number_format( $statistics['optimized_images'] ) ); ?></span>
