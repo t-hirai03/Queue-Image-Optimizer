@@ -243,12 +243,15 @@ class QIO_Admin {
 	public function ajax_save_settings() {
 		$this->verify_ajax_request();
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified in verify_ajax_request()
+		$post_data = wp_unslash( $_POST );
+
 		$settings = array(
-			'jpeg_quality'       => min( 100, max( 1, absint( $_POST['jpeg_quality'] ?? 82 ) ) ),
-			'png_compression'    => min( 9, max( 0, absint( $_POST['png_compression'] ?? 6 ) ) ),
-			'auto_optimize'      => ! empty( $_POST['auto_optimize'] ),
-			'backup_enabled'     => ! empty( $_POST['backup_enabled'] ),
-			'include_thumbnails' => ! empty( $_POST['include_thumbnails'] ),
+			'jpeg_quality'       => min( 100, max( 1, absint( $post_data['jpeg_quality'] ?? 82 ) ) ),
+			'png_compression'    => min( 9, max( 0, absint( $post_data['png_compression'] ?? 6 ) ) ),
+			'auto_optimize'      => ! empty( $post_data['auto_optimize'] ),
+			'backup_enabled'     => ! empty( $post_data['backup_enabled'] ),
+			'include_thumbnails' => ! empty( $post_data['include_thumbnails'] ),
 		);
 
 		update_option( 'qio_settings', $settings );
@@ -285,7 +288,13 @@ class QIO_Admin {
 		global $wpdb;
 
 		// 最適化済みフラグを削除
-		$deleted = $wpdb->query( "DELETE FROM {$wpdb->postmeta} WHERE meta_key LIKE '_qio_%'" );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$deleted = $wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM {$wpdb->postmeta} WHERE meta_key LIKE %s",
+				$wpdb->esc_like( '_qio_' ) . '%'
+			)
+		);
 
 		wp_send_json_success(
 			array(

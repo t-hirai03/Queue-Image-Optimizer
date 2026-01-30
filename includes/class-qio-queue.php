@@ -730,6 +730,7 @@ class QIO_Queue {
 		$table_name = $wpdb->prefix . 'qio_queue';
 
 		if ( 'all' === $status ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is not user input
 			$deleted = $wpdb->query( "DELETE FROM {$table_name}" );
 		} else {
 			$deleted = $wpdb->delete(
@@ -742,6 +743,7 @@ class QIO_Queue {
 		// 統計もクリア
 		if ( $clear_stats ) {
 			$stats_table = $wpdb->prefix . 'qio_stats';
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is not user input
 			$wpdb->query( "DELETE FROM {$stats_table}" );
 		}
 
