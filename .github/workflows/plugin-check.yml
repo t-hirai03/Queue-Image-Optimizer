@@ -1,0 +1,26 @@
+name: WordPress Plugin Check
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  plugin-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: imagick, gd
+
+      - name: Setup WordPress
+        uses: WordPress/plugin-check-action@v1
+        with:
+          slug: queue-image-optimizer
+          checks: plugin_review_phpcs,i18n_usage,file_type,plugin_header_fields,late_escaping,plugin_updater,plugin_readme
+          exclude-directories: vendor,node_modules

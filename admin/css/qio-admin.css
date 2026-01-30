@@ -1,0 +1,388 @@
+/**
+ * Queue Image Optimizer - Admin Styles
+ *
+ * @package QueueImageOptimizer
+ */
+
+/* ==========================================================================
+   Base Styles
+   ========================================================================== */
+
+.qio-wrap {
+	max-width: 1200px;
+}
+
+.qio-wrap h1 {
+	margin-block-end: 20px;
+}
+
+/* ==========================================================================
+   Notice Styles
+   ========================================================================== */
+
+.qio-notice {
+	padding: 12px 16px;
+	margin-block-end: 20px;
+	border-radius: 4px;
+	border-inline-start: 4px solid;
+}
+
+.qio-notice-info {
+	background-color: #f0f6fc;
+	border-color: #3582c4;
+}
+
+.qio-notice p {
+	margin: 0;
+}
+
+/* ==========================================================================
+   Badge Styles
+   ========================================================================== */
+
+.qio-badge {
+	display: inline-block;
+	padding: 2px 8px;
+	border-radius: 3px;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.qio-badge-success {
+	background-color: #d4edda;
+	color: #155724;
+}
+
+.qio-badge-warning {
+	background-color: #fff3cd;
+	color: #856404;
+}
+
+.qio-badge-error {
+	background-color: #f8d7da;
+	color: #721c24;
+}
+
+/* ==========================================================================
+   Stats Grid
+   ========================================================================== */
+
+.qio-stats-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	gap: 16px;
+	margin-block-end: 24px;
+}
+
+.qio-stat-box {
+	background: #fff;
+	padding: 20px;
+	border-radius: 8px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	text-align: center;
+}
+
+.qio-stat-number {
+	display: block;
+	font-size: 32px;
+	font-weight: 700;
+	color: #1e1e1e;
+	line-height: 1.2;
+}
+
+.qio-stat-label {
+	display: block;
+	font-size: 13px;
+	color: #646970;
+	margin-block-start: 4px;
+}
+
+/* ==========================================================================
+   Main Panel
+   ========================================================================== */
+
+.qio-main-panel {
+	background: #fff;
+	padding: 24px;
+	border-radius: 8px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	margin-block-end: 24px;
+}
+
+.qio-main-panel h2 {
+	margin-block: 0 20px;
+	padding-block-end: 12px;
+	border-block-end: 1px solid #e0e0e0;
+}
+
+/* ==========================================================================
+   Status Area
+   ========================================================================== */
+
+.qio-status-area {
+	text-align: center;
+	padding: 40px 20px;
+}
+
+.qio-status-idle p,
+.qio-status-scanned p {
+	font-size: 16px;
+	margin-block-end: 20px;
+}
+
+.qio-scan-result {
+	font-size: 18px;
+}
+
+.qio-scan-result strong {
+	color: #2271b1;
+	font-size: 24px;
+}
+
+/* ==========================================================================
+   Progress Bar
+   ========================================================================== */
+
+.qio-progress-wrapper {
+	max-width: 600px;
+	margin-inline: auto;
+	margin-block-end: 20px;
+}
+
+.qio-progress-bar {
+	height: 24px;
+	background: #e0e0e0;
+	border-radius: 12px;
+	overflow: hidden;
+	margin-block-end: 12px;
+}
+
+.qio-progress-fill {
+	height: 100%;
+	background: linear-gradient(90deg, #2271b1, #135e96);
+	border-radius: 12px;
+	transition: width 0.3s ease;
+}
+
+.qio-progress-paused .qio-progress-fill {
+	background: linear-gradient(90deg, #dba617, #c59b14);
+}
+
+.qio-progress-text {
+	font-size: 18px;
+	font-weight: 600;
+	color: #1e1e1e;
+}
+
+.qio-progress-estimate {
+	font-size: 14px;
+	color: #646970;
+	margin-block-start: 8px;
+}
+
+.qio-processing-note,
+.qio-paused-note {
+	color: #646970;
+	margin-block-end: 20px;
+}
+
+/* ==========================================================================
+   Completed Status
+   ========================================================================== */
+
+.qio-completed-icon {
+	width: 80px;
+	height: 80px;
+	background: #d4edda;
+	color: #155724;
+	border-radius: 50%;
+	font-size: 48px;
+	line-height: 80px;
+	margin-inline: auto;
+	margin-block-end: 16px;
+}
+
+.qio-status-completed h3 {
+	color: #155724;
+	margin-block-end: 20px;
+}
+
+.qio-completed-stats {
+	margin-block-end: 24px;
+}
+
+.qio-completed-stats p {
+	margin: 8px 0;
+	font-size: 16px;
+}
+
+.qio-completed-stats strong {
+	color: #1e1e1e;
+}
+
+.qio-failed-note {
+	color: #dc3232;
+}
+
+/* ==========================================================================
+   Help Panel
+   ========================================================================== */
+
+.qio-help-panel {
+	background: #f9f9f9;
+	padding: 20px 24px;
+	border-radius: 8px;
+	border: 1px solid #e0e0e0;
+}
+
+.qio-help-panel h3 {
+	margin-block: 0 12px;
+}
+
+.qio-help-panel ol {
+	margin: 0;
+	padding-inline-start: 20px;
+}
+
+.qio-help-panel li {
+	margin-block-end: 8px;
+	line-height: 1.6;
+}
+
+/* ==========================================================================
+   Settings Form
+   ========================================================================== */
+
+.qio-settings-form .form-table th {
+	width: 200px;
+	padding-block-start: 20px;
+}
+
+.qio-settings-form fieldset label {
+	display: block;
+	margin-block-end: 10px;
+}
+
+.qio-settings-form fieldset .description {
+	color: #646970;
+	font-style: normal;
+	margin-inline-start: 4px;
+}
+
+.qio-settings-section {
+	background: #fff;
+	padding: 20px 24px;
+	border-radius: 8px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	margin-block-end: 24px;
+}
+
+.qio-settings-section h2 {
+	margin-block: 0 16px;
+	padding-block-end: 12px;
+	border-block-end: 1px solid #e0e0e0;
+}
+
+/* Range Input */
+.qio-range {
+	width: 200px;
+	vertical-align: middle;
+}
+
+.qio-range-value {
+	display: inline-block;
+	min-width: 30px;
+	margin-inline-start: 10px;
+	font-weight: 600;
+}
+
+/* Save Message */
+.qio-save-message {
+	margin-inline-start: 10px;
+	color: #155724;
+}
+
+.qio-save-message.error {
+	color: #dc3232;
+}
+
+/* ==========================================================================
+   Danger Zone
+   ========================================================================== */
+
+.qio-danger-zone {
+	border: 1px solid #dc3232;
+}
+
+.qio-danger-zone h2 {
+	color: #dc3232;
+	border-block-end-color: #dc3232;
+}
+
+.qio-danger-zone .button {
+	margin-inline-end: 10px;
+}
+
+/* ==========================================================================
+   Loading Spinner
+   ========================================================================== */
+
+.qio-loading {
+	position: relative;
+}
+
+.qio-loading::after {
+	content: "";
+	position: absolute;
+	inset-block-start: 50%;
+	inset-inline-start: 50%;
+	width: 20px;
+	height: 20px;
+	margin-block-start: -10px;
+	margin-inline-start: -10px;
+	border: 2px solid #f3f3f3;
+	border-block-start: 2px solid #2271b1;
+	border-radius: 50%;
+	animation: qio-spin 1s linear infinite;
+}
+
+@keyframes qio-spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+}
+
+/* Button States */
+.button.qio-loading {
+	color: transparent;
+	pointer-events: none;
+}
+
+.button.qio-loading::after {
+	position: absolute;
+	inset-block-start: 50%;
+	inset-inline-start: 50%;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media screen and (max-width: 782px) {
+	.qio-stats-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.qio-stat-number {
+		font-size: 24px;
+	}
+
+	.qio-settings-form .form-table th {
+		width: auto;
+		padding-block-end: 0;
+	}
+
+	.qio-range {
+		width: 100%;
+		max-width: 200px;
+	}
+}

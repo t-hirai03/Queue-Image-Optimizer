@@ -1,0 +1,91 @@
+name: Create Release
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - '.github/**'
+      - 'readme.txt'
+      - 'README.md'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get version from plugin file
+        id: get_version
+        run: |
+          VERSION=$(grep -oP "Version:\s*\K[0-9.]+" queue-image-optimizer.php)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Plugin version: $VERSION"
+
+      - name: Check if release exists
+        id: check_release
+        run: |
+          if gh release view "v${{ steps.get_version.outputs.version }}" > /dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create plugin zip
+        if: steps.check_release.outputs.exists == 'false'
+        run: |
+          mkdir -p dist
+          zip -r dist/queue-image-optimizer-${{ steps.get_version.outputs.version }}.zip . \
+            -x "*.git*" \
+            -x "dist/*" \
+            -x "*.DS_Store" \
+            -x "node_modules/*" \
+            -x "*.log"
+
+      - name: Generate release notes
+        if: steps.check_release.outputs.exists == 'false'
+        id: release_notes
+        run: |
+          # Get commits since last tag or all commits if no tags
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -z "$LAST_TAG" ]; then
+            COMMITS=$(git log --pretty=format:"- %s" --no-merges)
+          else
+            COMMITS=$(git log ${LAST_TAG}..HEAD --pretty=format:"- %s" --no-merges)
+          fi
+
+          # Create release notes
+          cat << EOF > release_notes.md
+          ## Queue Image Optimizer v${{ steps.get_version.outputs.version }}
+
+          ### Changes
+          ${COMMITS}
+
+          ### Installation
+          1. Download \`queue-image-optimizer-${{ steps.get_version.outputs.version }}.zip\`
+          2. Go to WordPress Admin > Plugins > Add New > Upload Plugin
+          3. Upload the zip file and activate
+
+          ### Requirements
+          - WordPress 5.0+
+          - PHP 7.4+
+          - Imagick or GD Library
+          EOF
+
+      - name: Create GitHub Release
+        if: steps.check_release.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.get_version.outputs.version }}
+          name: v${{ steps.get_version.outputs.version }}
+          body_path: release_notes.md
+          files: dist/queue-image-optimizer-${{ steps.get_version.outputs.version }}.zip
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
