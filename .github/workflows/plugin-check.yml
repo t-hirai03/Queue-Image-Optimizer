@@ -21,5 +21,6 @@ jobs:
       - name: Setup WordPress
         uses: WordPress/plugin-check-action@v1
         with:
+          slug: queue-image-optimizer
           checks: plugin_review_phpcs,i18n_usage,file_type,plugin_header_fields,late_escaping,plugin_updater,plugin_readme
           exclude-directories: vendor,node_modules

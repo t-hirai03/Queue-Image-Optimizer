@@ -124,8 +124,10 @@ class QIO_Admin {
 					'error'             => __( 'エラーが発生しました', 'queue-image-optimizer' ),
 					'confirm_clear'     => __( '処理待ちリストをリセットしますか？', 'queue-image-optimizer' ),
 					'settings_saved'    => __( '設定を保存しました', 'queue-image-optimizer' ),
+					/* translators: %d: number of images */
 					'images_found'      => __( '%d 枚の未最適化画像が見つかりました', 'queue-image-optimizer' ),
 					'no_images'         => __( '未最適化の画像はありません', 'queue-image-optimizer' ),
+					/* translators: %s: estimated time */
 					'estimated_time'    => __( '推定残り時間: %s', 'queue-image-optimizer' ),
 				),
 			)

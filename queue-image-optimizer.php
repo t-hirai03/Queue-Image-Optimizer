@@ -116,9 +116,6 @@ final class Queue_Image_Optimizer {
 
 		// プラグイン初期化
 		add_action( 'init', array( $this, 'init' ) );
-
-		// 翻訳ファイル読み込み
-		add_action( 'init', array( $this, 'load_textdomain' ) );
 	}
 
 	/**
@@ -135,17 +132,6 @@ final class Queue_Image_Optimizer {
 		if ( is_admin() ) {
 			$this->admin = new QIO_Admin( $this->queue );
 		}
-	}
-
-	/**
-	 * 翻訳ファイルの読み込み
-	 */
-	public function load_textdomain() {
-		load_plugin_textdomain(
-			'queue-image-optimizer',
-			false,
-			dirname( QIO_PLUGIN_BASENAME ) . '/languages'
-		);
 	}
 }
 
