@@ -227,11 +227,22 @@
 				return;
 			}
 
-			console.log('[QIO] processNow called');
-			this.ajax('process_now')
-				.done((response) => {
+			console.log('[QIO] processNow called (parallel)');
+
+			// 並列で3リクエスト送信
+			const requests = [
+				this.ajax('process_now'),
+				this.ajax('process_now'),
+				this.ajax('process_now')
+			];
+
+			Promise.all(requests.map(r => r.catch(e => e)))
+				.then((responses) => {
+					// 最後のレスポンスを使用
+					const response = responses.find(r => r && r.success) || responses[0];
 					console.log('[QIO] processNow response:', response);
-					if (response.success) {
+
+					if (response && response.success) {
 						const { progress, statistics } = response.data;
 
 						// Update progress bar
@@ -273,17 +284,13 @@
 							this.stopContinuousProcessing();
 							this.showStatus('paused');
 						} else {
-							// 次のバッチを即座に実行（少し待機して連続リクエスト）
-							this.processInterval = setTimeout(() => this.processNow(), 500);
+							// 次のバッチを即座に実行
+							this.processInterval = setTimeout(() => this.processNow(), 200);
 						}
 					} else {
 						// エラー時は少し待って再試行
 						this.processInterval = setTimeout(() => this.processNow(), 2000);
 					}
-				})
-				.fail(() => {
-					// 失敗時は少し待って再試行
-					this.processInterval = setTimeout(() => this.processNow(), 2000);
 				});
 		},
 

@@ -387,31 +387,40 @@ class QIO_Queue {
 		$mode_settings = $this->get_mode_settings();
 		$batch_size    = apply_filters( 'qio_batch_size', $mode_settings['batch_size'] );
 
-		// 処理対象を取得
-		$items = $wpdb->get_results(
+		// 並列処理対応: 先にUPDATEでpendingをprocessingに変更し、そのIDを取得
+		$batch_id = uniqid( 'batch_', true );
+
+		$wpdb->query(
 			$wpdb->prepare(
-				"SELECT * FROM {$table_name} WHERE status = 'pending' ORDER BY priority ASC, id ASC LIMIT %d",
+				"UPDATE {$table_name} SET status = 'processing', error_message = %s
+				WHERE status = 'pending' ORDER BY priority ASC, id ASC LIMIT %d",
+				$batch_id,
 				$batch_size
 			)
 		);
 
+		// このバッチで処理するレコードを取得
+		$items = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT * FROM {$table_name} WHERE status = 'processing' AND error_message = %s",
+				$batch_id
+			)
+		);
+
 		if ( empty( $items ) ) {
-			// 全て完了
-			$this->complete_processing();
+			// 処理対象がない場合、他に pending がなければ完了
+			$pending_count = $wpdb->get_var( "SELECT COUNT(*) FROM {$table_name} WHERE status = 'pending'" );
+			$processing_count = $wpdb->get_var( "SELECT COUNT(*) FROM {$table_name} WHERE status = 'processing'" );
+
+			if ( 0 == $pending_count && 0 == $processing_count ) {
+				$this->complete_processing();
+			}
 			return;
 		}
 
 		$processed = 0;
 
 		foreach ( $items as $item ) {
-			// ステータスを処理中に更新
-			$wpdb->update(
-				$table_name,
-				array( 'status' => 'processing' ),
-				array( 'id' => $item->id ),
-				array( '%s' ),
-				array( '%d' )
-			);
 
 			// 圧縮実行
 			$result = $this->compressor->compress( $item->file_path );
