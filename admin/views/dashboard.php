@@ -16,8 +16,8 @@ $statistics = $this->queue->get_statistics();
 <div class="wrap qio-wrap">
 	<h1><?php esc_html_e( 'Queue Image Optimizer', 'queue-image-optimizer' ); ?></h1>
 
-	<!-- 統計サマリー -->
-	<div class="qio-stats-grid">
+	<!-- 統計サマリー（スキャン後に表示） -->
+	<div class="qio-stats-grid" id="qio-stats-grid" <?php echo 'idle' === $progress['status'] ? 'style="display:none;"' : ''; ?>>
 		<div class="qio-stat-box">
 			<span class="qio-stat-number" id="qio-total-images"><?php echo esc_html( number_format( $statistics['total_images'] ) ); ?></span>
 			<span class="qio-stat-label"><?php esc_html_e( '圧縮対象ファイル総数', 'queue-image-optimizer' ); ?></span>

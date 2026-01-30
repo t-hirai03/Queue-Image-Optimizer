@@ -111,6 +111,8 @@
 						if (data.count > 0) {
 							$('#qio-scan-count').text(data.count.toLocaleString());
 							$('#qio-scan-size').text('(' + this.formatBytes(data.size) + ')');
+							$('#qio-total-images').text(data.count.toLocaleString());
+							$('#qio-stats-grid').show();
 							this.showStatus('scanned');
 						} else {
 							alert(qioAdmin.strings.no_images);
